@@ -1,4 +1,4 @@
-function crop_ROIs_new()
+function crop_ROIs_new(folder)
 
 
 
@@ -23,7 +23,12 @@ Folder   = '/Research/Mammography/CBIS-DDSM/' ;
 FileList = dir(fullfile(Folder, '**', '*.dcm')) ; %this is a structure with filenames and folders for each dcm image in the DDSM database
 
 %write folder
-write_folder   = '/Research/Mammography/CBIS-DDSM/MYROIS/TEST/' ; 
+if (strcmp(folder,'TRAIN'))
+    write_folder   = '/Research/Mammography/CBIS-DDSM/MYROIS/TRAIN/' ; 
+else 
+    write_folder   = '/Research/Mammography/CBIS-DDSM/MYROIS/TEST/' ;
+end
+    
 
 %open file with all information for ROIS
 roifile = uigetfile('*.txt', 'Select file with ROIs information') ; 
@@ -73,29 +78,31 @@ while(~feof(f2))
         %get info if MALIGNANT / BENIGN
         if strfind(data, 'M')
             type = 'MALIGNANT' ;
-            image_name = sprintf('%sMALIGNANT/%s_MALIGNANT_%05d.png', write_folder, PatientID, file_index) ; %the output type is PNG 8-bit and the filename is a five-digit fname (e.g. 00012.jpg)
+            image_name = sprintf('%sMALIGNANT/%s_MALIGNANT_%05d.jpg', write_folder, PatientID, file_index) ; %the output type is JPG 8-bit color and the descriptive filename
             if (big_flag==0)
-                imwrite((img_slice), image_name, 'PNG') ; 
+                img_slice = uint8((double(img_slice)/65535.)*255) ; %convert the slice from uint16 to uint8 before saving
+                imwrite(repmat(img_slice,1,1,3), image_name, 'JPEG', 'BitDepth', 8) ; 
             else
                 disp('INSIDE!') ; 
                 name1 = sprintf('1_%s', image_name) ;
                 name2 = sprintf('2_%s', image_name) ;
-                imwrite((img_slice1), 'PNG') ;
-                imwrite((img_slice2), name2, 'PNG') ; 
+                imwrite(repmat(img_slice,1,1,3), 'JPEG', 'BitDepth', 8) ;
+                imwrite(repmat(img_slice,1,1,3), name2, 'JPEG', 'BitDepth', 8) ; 
             end
                
         else
                 
             type = 'BENIGN' ; 
-            image_name = sprintf('%sBENIGN/%s_BENIGN_%05d.png', write_folder, PatientID, file_index) ; %the output type is PNG 8-bit and the filename is a five-digit fname (e.g. 00012.jpg)
+            image_name = sprintf('%sBENIGN/%s_BENIGN_%05d.jpg', write_folder, PatientID, file_index) ; %the output type is PNG 8-bit and the filename is a five-digit fname (e.g. 00012.jpg)
             if (big_flag==0)
-                imwrite((img_slice), image_name, 'PNG') ; 
+                img_slice = uint8((double(img_slice)/65535.)*255) ; %convert the slice from uint16 to uint8 before saving
+                imwrite(repmat(img_slice,1,1,3), image_name, 'JPEG', 'BitDepth', 8) ; 
             else
                 disp('INSIDE!') ; 
                 name1 = sprintf('1_%s', image_name) ;
                 name2 = sprintf('2_%s', image_name) ;
-                imwrite((img_slice1), name1, 'PNG') ;
-                imwrite((img_slice2), name2, 'PNG') ; 
+                imwrite(repmat(img_slice,1,1,3), name1, 'JPEG', 'BitDepth', 8) ;
+                imwrite(repmat(img_slice,1,1,3), name2, 'JPEG', 'BitDepth', 8) ; 
             end
         end
     end   
