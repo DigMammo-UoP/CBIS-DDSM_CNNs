@@ -86,8 +86,10 @@ while(~feof(f2))
                 disp('INSIDE!') ; 
                 name1 = sprintf('1_%s', image_name) ;
                 name2 = sprintf('2_%s', image_name) ;
-                imwrite(repmat(img_slice,1,1,3), 'JPEG', 'BitDepth', 8) ;
-                imwrite(repmat(img_slice,1,1,3), name2, 'JPEG', 'BitDepth', 8) ; 
+                img_slice1 = uint8((double(img_slice1)/65535.)*255) ; %convert the slice from uint16 to uint8 before saving
+                img_slice2 = uint8((double(img_slice2)/65535.)*255) ; %convert the slice from uint16 to uint8 before saving
+                imwrite(repmat(img_slice1,1,1,3), name1, 'JPEG', 'BitDepth', 8) ;
+                imwrite(repmat(img_slice2,1,1,3), name2, 'JPEG', 'BitDepth', 8) ; 
             end
                
         else
@@ -101,8 +103,10 @@ while(~feof(f2))
                 disp('INSIDE!') ; 
                 name1 = sprintf('1_%s', image_name) ;
                 name2 = sprintf('2_%s', image_name) ;
-                imwrite(repmat(img_slice,1,1,3), name1, 'JPEG', 'BitDepth', 8) ;
-                imwrite(repmat(img_slice,1,1,3), name2, 'JPEG', 'BitDepth', 8) ; 
+                img_slice1 = uint8((double(img_slice1)/65535.)*255) ; %convert the slice from uint16 to uint8 before saving
+                img_slice2 = uint8((double(img_slice2)/65535.)*255) ; %convert the slice from uint16 to uint8 before saving
+                imwrite(repmat(img_slice1,1,1,3), name1, 'JPEG', 'BitDepth', 8) ;
+                imwrite(repmat(img_slice2,1,1,3), name2, 'JPEG', 'BitDepth', 8) ; 
             end
         end
     end   
